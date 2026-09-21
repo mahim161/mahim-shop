@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mahim Shop</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f6fa;color:#171923}
+header{background:#111827;color:white;padding:18px 16px;position:sticky;top:0;z-index:5}
+.logo{font-size:24px;font-weight:800}.tag{font-size:12px;opacity:.75}
+.search{margin-top:12px;width:100%;padding:12px;border:0;border-radius:10px}
+nav{display:flex;gap:8px;overflow:auto;padding:10px 0}button{border:0;border-radius:9px;padding:10px 13px;font-weight:700;cursor:pointer}.navbtn{background:#263244;color:#fff}
+main{max-width:900px;margin:auto;padding:16px}.hero{background:#111827;color:#fff;padding:22px;border-radius:16px;margin-bottom:16px}.hero h1{margin:0 0 8px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.card{background:#fff;border-radius:14px;padding:12px;box-shadow:0 2px 10px #00000010}.pic{height:120px;border-radius:10px;background:linear-gradient(135deg,#dbeafe,#e9d5ff);display:flex;align-items:center;justify-content:center;font-size:48px}.price{font-size:18px;font-weight:800;margin:7px 0}.muted{color:#667085;font-size:13px}.add{width:100%;background:#111827;color:#fff;margin-top:8px}
+.panel{display:none;background:#fff;padding:16px;border-radius:14px;margin-top:16px}.panel.active{display:block}.row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #eee}
+input,textarea,select{width:100%;padding:11px;margin:6px 0 10px;border:1px solid #ddd;border-radius:9px}
+@media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}}
+</style></head>
+<body>
+<header><div class="logo">🎮 Mahim Shop</div><div class="tag">Gaming Products Store</div>
+<input id="search" class="search" placeholder="প্রোডাক্ট খুঁজুন..." oninput="render()">
+<nav><button class="navbtn" onclick="show('shop')">Shop</button><button class="navbtn" onclick="show('cart')">🛒 Cart (<span id="count">0</span>)</button><button class="navbtn" onclick="show('admin')">Admin</button></nav></header>
+<main>
+<section id="shop">
+<div class="hero"><h1>Gaming Setup Upgrade করুন 🔥</h1><div>Mouse, Keyboard, Headset ও Gaming Accessories</div></div>
+<div id="products" class="grid"></div></section>
+<section id="cart" class="panel"><h2>🛒 Your Cart</h2><div id="cartList"></div><h3 id="total"></h3><button onclick="checkout()">Checkout</button></section>
+<section id="admin" class="panel"><h2>⚙️ Admin</h2><p class="muted">Demo admin: এই browser-এর local storage-এ product যোগ হবে।</p>
+<input id="pname" placeholder="Product name"><input id="pprice" type="number" placeholder="Price (৳)"><select id="pcat"><option>Gaming Accessories</option><option>Mouse</option><option>Keyboard</option><option>Headset</option><option>Mobile Gaming</option></select>
+<button onclick="addProduct()">Product Add</button><div id="adminList"></div></section>
+<section id="checkout" class="panel"><h2>📦 Order</h2><input id="name" placeholder="আপনার নাম"><input id="phone" placeholder="মোবাইল নম্বর"><textarea id="address" placeholder="ডেলিভারি ঠিকানা"></textarea><button onclick="placeOrder()">অর্ডার কনফার্ম</button></section>
+</main>
+<script>
+const key='mahim_products', cartKey='mahim_cart';
+let products=JSON.parse(localStorage.getItem(key)||'null')||[
+{name:'Gaming Mouse',price:850,cat:'Mouse',icon:'🖱️'},{name:'Gaming Keyboard',price:1450,cat:'Keyboard',icon:'⌨️'},
+{name:'Gaming Headset',price:1200,cat:'Headset',icon:'🎧'},{name:'Mobile Gaming Holder',price:450,cat:'Mobile Gaming',icon:'📱'}
+],cart=JSON.parse(localStorage.getItem(cartKey)||'[]');
+function save(){localStorage.setItem(key,JSON.stringify(products));localStorage.setItem(cartKey,JSON.stringify(cart))}
+function render(){let q=document.getElementById('search').value.toLowerCase();document.getElementById('products').innerHTML=products.filter(p=>(p.name+p.cat).toLowerCase().includes(q)).map((p,i)=>`<div class="card"><div class="pic">${p.icon||'🎮'}</div><b>${p.name}</b><div class="muted">${p.cat}</div><div class="price">৳${p.price}</div><button class="add" onclick="add(${i})">Add to Cart</button></div>`).join('');document.getElementById('count').textContent=cart.length;renderCart();renderAdmin()}
+function add(i){cart.push(products[i]);save();render();alert('Cart-এ যোগ হয়েছে')}
+function renderCart(){let box=document.getElementById('cartList');box.innerHTML=cart.length?cart.map((p,i)=>`<div class="row"><span>${p.name}</span><b>৳${p.price}</b><button onclick="removeCart(${i})">✕</button></div>`).join(''):'Cart খালি';document.getElementById('total').textContent='মোট: ৳'+cart.reduce((s,p)=>s+p.price,0)}
+function removeCart(i){cart.splice(i,1);save();render()}
+function show(id){document.querySelectorAll('main>section').forEach(x=>x.classList.remove('active'));if(id==='shop')document.getElementById('shop').style.display='block';else document.getElementById(id).classList.add('active')}
+function checkout(){if(!cart.length)return alert('আগে Cart-এ product যোগ করুন');show('checkout')}
+function placeOrder(){if(!name.value||!phone.value||!address.value)return alert('সব তথ্য পূরণ করুন');alert('অর্ডার সফলভাবে গ্রহণ করা হয়েছে!');cart=[];save();render();show('shop')}
+function addProduct(){if(!pname.value||!pprice.value)return alert('নাম ও দাম দিন');products.push({name:pname.value,price:Number(pprice.value),cat:pcat.value,icon:'🎮'});pname.value='';pprice.value='';save();render();alert('Product যোগ হয়েছে')}
+function renderAdmin(){document.getElementById('adminList').innerHTML='<h3>Products</h3>'+products.map((p,i)=>`<div class="row"><span>${p.name} — ৳${p.price}</span><button onclick="products.splice(${i},1);save();render()">Delete</button></div>`).join('')}
+render();
+</script></body></html>
