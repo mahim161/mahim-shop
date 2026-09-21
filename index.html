@@ -203,12 +203,12 @@ footer{
 
 <main>
 
-  <section class="hero">
-    <h1>স্বাগতম Mahim Shop-এ</h1>
-    <p>আপনার পছন্দের প্রোডাক্ট বেছে নিয়ে অর্ডার করুন।</p>
-  </section>
+<section class="hero">
+  <h1>স্বাগতম Mahim Shop-এ</h1>
+  <p>আপনার পছন্দের প্রোডাক্ট বেছে নিয়ে অর্ডার করুন।</p>
+</section>
 
-  <div id="products" class="products"></div>
+<div id="products" class="products"></div>
 
 </main>
 
@@ -216,57 +216,74 @@ footer{
   © 2026 Mahim Shop
 </footer>
 
-
 <!-- CART / ORDER -->
 
 <div id="overlay" class="overlay">
 
-  <div class="modal">
+<div class="modal">
 
-    <div class="modal-head">
-      <h2>🛒 আপনার Cart</h2>
-
-      <button class="close" onclick="closeCart()">✕</button>
-    </div>
-
-    <div id="cartItems"></div>
-
-    <div class="total">
-      মোট: ৳<span id="total">0</span>
-    </div>
-
-    <h2>📦 অর্ডারের তথ্য</h2>
-
-    <label>নাম *</label>
-    <input id="name" placeholder="আপনার নাম">
-
-    <label>ফোন নম্বর *</label>
-    <input id="phone" type="tel" placeholder="01XXXXXXXXX">
-
-    <label>সম্পূর্ণ ঠিকানা *</label>
-    <textarea id="address" placeholder="আপনার ঠিকানা"></textarea>
-
-    <label>পেমেন্ট পদ্ধতি *</label>
-
-    <select id="payment" onchange="showPayment()">
-      <option value="">পেমেন্ট নির্বাচন করুন</option>
-      <option value="Cash on Delivery">Cash on Delivery</option>
-      <option value="bKash">bKash</option>
-      <option value="Nagad">Nagad</option>
-    </select>
-
-    <div id="paymentInfo"></div>
-
-    <label>অতিরিক্ত নোট</label>
-    <textarea id="note" placeholder="অতিরিক্ত কোনো তথ্য থাকলে লিখুন"></textarea>
-
-    <button class="order" onclick="placeOrder()">
-      📲 অর্ডার করুন
-    </button>
-
-  </div>
+<div class="modal-head">
+  <h2>🛒 আপনার Cart</h2>
+  <button class="close" onclick="closeCart()">✕</button>
 </div>
 
+<div id="cartItems"></div>
+
+<div class="total">
+  পণ্যের মোট: ৳<span id="subtotal">0</span><br>
+
+  <span style="font-size:17px;font-weight:normal">
+    ডেলিভারি চার্জ: ৳<span id="deliveryCharge">0</span>
+  </span><br>
+
+  সর্বমোট: ৳<span id="total">0</span>
+</div>
+
+<h2>📦 অর্ডারের তথ্য</h2>
+
+<label>নাম *</label>
+<input id="name" placeholder="আপনার নাম">
+
+<label>ফোন নম্বর *</label>
+<input id="phone" type="tel" placeholder="01XXXXXXXXX">
+
+<label>সম্পূর্ণ ঠিকানা *</label>
+<textarea id="address" placeholder="আপনার ঠিকানা"></textarea>
+
+<label>ডেলিভারি এলাকা *</label>
+
+<select id="deliveryArea" onchange="updateOrderTotal()">
+  <option value="">এলাকা নির্বাচন করুন</option>
+  <option value="dhaka">ঢাকার ভিতরে — ডেলিভারি চার্জ ৳80</option>
+  <option value="outside">ঢাকার বাইরে — ডেলিভারি চার্জ ৳125</option>
+</select>
+
+<div id="deliveryInfo" class="payment"></div>
+
+<label>পেমেন্ট পদ্ধতি *</label>
+
+<select id="payment" onchange="showPayment(); updateOrderTotal()">
+  <option value="">পেমেন্ট নির্বাচন করুন</option>
+  <option value="Cash on Delivery">Cash on Delivery</option>
+  <option value="bKash">bKash</option>
+  <option value="Nagad">Nagad</option>
+</select>
+
+<div id="paymentInfo"></div>
+
+<label>অতিরিক্ত নোট</label>
+
+<textarea
+  id="note"
+  placeholder="অতিরিক্ত কোনো তথ্য থাকলে লিখুন">
+</textarea>
+
+<button class="order" onclick="placeOrder()">
+  📲 অর্ডার করুন
+</button>
+
+</div>
+</div>
 
 <script>
 
@@ -287,36 +304,35 @@ const NAGAD_NUMBER = "01932558716";
 
 const products = [
 
-  {
-    id:1,
-    name:"টি-শার্ট",
-    price:650,
-    image:"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80"
-  },
+{
+  id:1,
+  name:"টি-শার্ট",
+  price:650,
+  image:"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80"
+},
 
-  {
-    id:2,
-    name:"জুতা",
-    price:1200,
-    image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80"
-  },
+{
+  id:2,
+  name:"জুতা",
+  price:1200,
+  image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80"
+},
 
-  {
-    id:3,
-    name:"ঘড়ি",
-    price:950,
-    image:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80"
-  },
+{
+  id:3,
+  name:"ঘড়ি",
+  price:950,
+  image:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80"
+},
 
-  {
-    id:4,
-    name:"ব্যাগ",
-    price:850,
-    image:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80"
-  }
+{
+  id:4,
+  name:"ব্যাগ",
+  price:850,
+  image:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80"
+}
 
 ];
-
 
 let cart=[];
 
@@ -325,36 +341,36 @@ let cart=[];
 
 function displayProducts(list=products){
 
-  const box=document.getElementById("products");
+const box=document.getElementById("products");
 
-  if(list.length===0){
-    box.innerHTML="<p>কোনো প্রোডাক্ট পাওয়া যায়নি।</p>";
-    return;
-  }
+if(list.length===0){
+  box.innerHTML="<p>কোনো প্রোডাক্ট পাওয়া যায়নি।</p>";
+  return;
+}
 
-  box.innerHTML=list.map(p=>`
+box.innerHTML=list.map(p=>`
 
-    <div class="product">
+<div class="product">
 
-      <img src="${p.image}" alt="${p.name}">
+<img src="${p.image}" alt="${p.name}">
 
-      <div class="info">
+<div class="info">
 
-        <h3>${p.name}</h3>
+<h3>${p.name}</h3>
 
-        <div class="price">
-          ৳${p.price}
-        </div>
+<div class="price">
+৳${p.price}
+</div>
 
-        <button class="add" onclick="addToCart(${p.id})">
-          🛒 Cart-এ যোগ করুন
-        </button>
+<button class="add" onclick="addToCart(${p.id})">
+🛒 Cart-এ যোগ করুন
+</button>
 
-      </div>
+</div>
 
-    </div>
+</div>
 
-  `).join("");
+`).join("");
 
 }
 
@@ -363,19 +379,19 @@ function displayProducts(list=products){
 
 function addToCart(id){
 
-  const product=products.find(p=>p.id===id);
+const product=products.find(p=>p.id===id);
 
-  const item=cart.find(p=>p.id===id);
+const item=cart.find(p=>p.id===id);
 
-  if(item){
-    item.quantity++;
-  }else{
-    cart.push({...product,quantity:1});
-  }
+if(item){
+  item.quantity++;
+}else{
+  cart.push({...product,quantity:1});
+}
 
-  updateCart();
+updateCart();
 
-  alert(product.name+" Cart-এ যোগ হয়েছে!");
+alert(product.name+" Cart-এ যোগ হয়েছে!");
 
 }
 
@@ -384,82 +400,165 @@ function addToCart(id){
 
 function updateCart(){
 
-  const count=cart.reduce(
-    (sum,p)=>sum+p.quantity,0
-  );
+const count=cart.reduce(
+  (sum,p)=>sum+p.quantity,0
+);
 
-  document.getElementById("count").textContent=count;
+document.getElementById("count").textContent=count;
 
-  renderCart();
+renderCart();
 
 }
 
 
 function renderCart(){
 
-  const box=document.getElementById("cartItems");
+const box=document.getElementById("cartItems");
 
-  if(cart.length===0){
+if(cart.length===0){
 
-    box.innerHTML=
-      "<p style='text-align:center'>আপনার Cart খালি।</p>";
+box.innerHTML="<p style='text-align:center'>আপনার Cart খালি।</p>";
 
-    document.getElementById("total").textContent="0";
+document.getElementById("subtotal").textContent="0";
+document.getElementById("deliveryCharge").textContent="0";
+document.getElementById("total").textContent="0";
 
-    return;
-  }
-
-
-  box.innerHTML=cart.map(p=>`
-
-    <div class="cart-item">
-
-      <div>
-        <strong>${p.name}</strong><br>
-        ৳${p.price} × ${p.quantity}
-      </div>
-
-      <div class="qty">
-
-        <button onclick="changeQty(${p.id},-1)">
-          −
-        </button>
-
-        ${p.quantity}
-
-        <button onclick="changeQty(${p.id},1)">
-          +
-        </button>
-
-      </div>
-
-    </div>
-
-  `).join("");
+return;
+}
 
 
-  const total=cart.reduce(
-    (sum,p)=>sum+(p.price*p.quantity),0
-  );
+box.innerHTML=cart.map(p=>`
 
-  document.getElementById("total").textContent=total;
+<div class="cart-item">
+
+<div>
+<strong>${p.name}</strong><br>
+৳${p.price} × ${p.quantity}
+</div>
+
+<div class="qty">
+
+<button onclick="changeQty(${p.id},-1)">
+−
+</button>
+
+${p.quantity}
+
+<button onclick="changeQty(${p.id},1)">
++
+</button>
+
+</div>
+
+</div>
+
+`).join("");
+
+
+updateOrderTotal();
 
 }
 
 
 function changeQty(id,change){
 
-  const item=cart.find(p=>p.id===id);
+const item=cart.find(p=>p.id===id);
 
-  if(!item)return;
+if(!item)return;
 
-  item.quantity+=change;
+item.quantity+=change;
 
-  if(item.quantity<=0){
-    cart=cart.filter(p=>p.id!==id);
-  }
+if(item.quantity<=0){
+  cart=cart.filter(p=>p.id!==id);
+}
 
-  updateCart();
+updateCart();
+
+}
+
+
+/* DELIVERY CHARGE */
+
+function getDeliveryCharge(){
+
+const payment=document.getElementById("payment").value;
+
+const area=document.getElementById("deliveryArea").value;
+
+/*
+  ডেলিভারি চার্জ শুধু Cash on Delivery-এর জন্য
+*/
+
+if(payment!=="Cash on Delivery"){
+  return 0;
+}
+
+if(area==="dhaka"){
+  return 80;
+}
+
+if(area==="outside"){
+  return 125;
+}
+
+return 0;
+
+}
+
+
+function updateOrderTotal(){
+
+const subtotal=cart.reduce(
+  (sum,p)=>sum+(p.price*p.quantity),0
+);
+
+const deliveryCharge=getDeliveryCharge();
+
+document.getElementById("subtotal").textContent=subtotal;
+
+document.getElementById("deliveryCharge").textContent=deliveryCharge;
+
+document.getElementById("total").textContent=
+  subtotal+deliveryCharge;
+
+
+const info=document.getElementById("deliveryInfo");
+
+const payment=document.getElementById("payment").value;
+
+const area=document.getElementById("deliveryArea").value;
+
+
+if(payment!=="Cash on Delivery"){
+
+info.innerHTML=
+"<strong>🚚 ডেলিভারি চার্জ</strong><br>"+
+"Cash on Delivery নির্বাচন করলে ঢাকার ভিতরে ৳80 এবং ঢাকার বাইরে ৳125 যোগ হবে।";
+
+}
+
+else if(area==="dhaka"){
+
+info.innerHTML=
+"<strong>🚚 ডেলিভারি চার্জ: ৳80</strong><br>"+
+"ঢাকার ভিতরে";
+
+}
+
+else if(area==="outside"){
+
+info.innerHTML=
+"<strong>🚚 ডেলিভারি চার্জ: ৳125</strong><br>"+
+"ঢাকার বাইরে";
+
+}
+
+else{
+
+info.innerHTML=
+"<strong>🚚 ডেলিভারি এলাকা নির্বাচন করুন</strong>";
+
+}
 
 }
 
@@ -468,16 +567,16 @@ function changeQty(id,change){
 
 function openCart(){
 
-  document.getElementById("overlay").style.display="block";
+document.getElementById("overlay").style.display="block";
 
-  renderCart();
+renderCart();
 
 }
 
 
 function closeCart(){
 
-  document.getElementById("overlay").style.display="none";
+document.getElementById("overlay").style.display="none";
 
 }
 
@@ -486,16 +585,16 @@ function closeCart(){
 
 function searchProducts(){
 
-  const text=document
-    .getElementById("search")
-    .value
-    .toLowerCase();
+const text=document
+.getElementById("search")
+.value
+.toLowerCase();
 
-  const result=products.filter(p=>
-    p.name.toLowerCase().includes(text)
-  );
+const result=products.filter(p=>
+p.name.toLowerCase().includes(text)
+);
 
-  displayProducts(result);
+displayProducts(result);
 
 }
 
@@ -504,70 +603,70 @@ function searchProducts(){
 
 function showPayment(){
 
-  const payment=
-    document.getElementById("payment").value;
+const payment=
+document.getElementById("payment").value;
 
-  const box=
-    document.getElementById("paymentInfo");
+const box=
+document.getElementById("paymentInfo");
 
 
-  if(payment==="bKash"){
+if(payment==="bKash"){
 
-    box.innerHTML=`
+box.innerHTML=`
 
-      <div class="payment">
+<div class="payment">
 
-        <strong>💳 bKash Payment</strong>
+<strong>💳 bKash Payment</strong>
 
-        <p>
-          এই নম্বরে bKash করুন:
-        </p>
+<p>
+এই নম্বরে bKash করুন:
+</p>
 
-        <div class="pay-number">
-          ${BKASH_NUMBER}
-        </div>
+<div class="pay-number">
+${BKASH_NUMBER}
+</div>
 
-        <small>
-          পেমেন্ট করার পর অর্ডার করুন।
-        </small>
+<small>
+পেমেন্ট করার পর অর্ডার করুন।
+</small>
 
-      </div>
+</div>
 
-    `;
+`;
 
-  }
+}
 
-  else if(payment==="Nagad"){
+else if(payment==="Nagad"){
 
-    box.innerHTML=`
+box.innerHTML=`
 
-      <div class="payment">
+<div class="payment">
 
-        <strong>💳 Nagad Payment</strong>
+<strong>💳 Nagad Payment</strong>
 
-        <p>
-          এই নম্বরে Nagad করুন:
-        </p>
+<p>
+এই নম্বরে Nagad করুন:
+</p>
 
-        <div class="pay-number">
-          ${NAGAD_NUMBER}
-        </div>
+<div class="pay-number">
+${NAGAD_NUMBER}
+</div>
 
-        <small>
-          পেমেন্ট করার পর অর্ডার করুন।
-        </small>
+<small>
+পেমেন্ট করার পর অর্ডার করুন।
+</small>
 
-      </div>
+</div>
 
-    `;
+`;
 
-  }
+}
 
-  else{
+else{
 
-    box.innerHTML="";
+box.innerHTML="";
 
-  }
+}
 
 }
 
@@ -576,66 +675,91 @@ function showPayment(){
 
 function placeOrder(){
 
-  if(cart.length===0){
+if(cart.length===0){
 
-    alert("প্রথমে Cart-এ প্রোডাক্ট যোগ করুন।");
+alert("প্রথমে Cart-এ প্রোডাক্ট যোগ করুন।");
 
-    return;
-  }
+return;
 
-
-  const name=
-    document.getElementById("name").value.trim();
-
-  const phone=
-    document.getElementById("phone").value.trim();
-
-  const address=
-    document.getElementById("address").value.trim();
-
-  const payment=
-    document.getElementById("payment").value;
-
-  const note=
-    document.getElementById("note").value.trim();
+}
 
 
-  if(!name || !phone || !address){
+const name=
+document.getElementById("name").value.trim();
 
-    alert("নাম, ফোন নম্বর এবং ঠিকানা পূরণ করুন।");
+const phone=
+document.getElementById("phone").value.trim();
 
-    return;
-  }
+const address=
+document.getElementById("address").value.trim();
 
+const payment=
+document.getElementById("payment").value;
 
-  if(!payment){
+const deliveryArea=
+document.getElementById("deliveryArea").value;
 
-    alert("একটি পেমেন্ট পদ্ধতি নির্বাচন করুন।");
-
-    return;
-  }
-
-
-  let total=0;
-
-  let orderText="";
+const note=
+document.getElementById("note").value.trim();
 
 
-  cart.forEach(p=>{
+if(!name || !phone || !address){
 
-    const subtotal=p.price*p.quantity;
+alert("নাম, ফোন নম্বর এবং ঠিকানা পূরণ করুন।");
 
-    total+=subtotal;
+return;
 
-    orderText +=
-      "• "+p.name+
-      " × "+p.quantity+
-      " = ৳"+subtotal+"\n";
-
-  });
+}
 
 
-  let message=
+if(!payment){
+
+alert("একটি পেমেন্ট পদ্ধতি নির্বাচন করুন।");
+
+return;
+
+}
+
+
+if(!deliveryArea){
+
+alert("ডেলিভারি এলাকা নির্বাচন করুন।");
+
+return;
+
+}
+
+
+const subtotal=cart.reduce(
+(sum,p)=>sum+(p.price*p.quantity),0
+);
+
+const deliveryCharge=getDeliveryCharge();
+
+const total=subtotal+deliveryCharge;
+
+const areaText=
+deliveryArea==="dhaka"
+? "ঢাকার ভিতরে"
+: "ঢাকার বাইরে";
+
+
+let orderText="";
+
+
+cart.forEach(p=>{
+
+const itemTotal=p.price*p.quantity;
+
+orderText+=
+"• "+p.name+
+" × "+p.quantity+
+" = ৳"+itemTotal+"\n";
+
+});
+
+
+let message=
 `🛍️ *নতুন অর্ডার - Mahim Shop*
 
 👤 নাম: ${name}
@@ -645,47 +769,50 @@ function placeOrder(){
 🛒 অর্ডার:
 ${orderText}
 
-💰 মোট: ৳${total}
+💰 পণ্যের মোট: ৳${subtotal}
+🚚 ডেলিভারি: ${areaText}
+📦 ডেলিভারি চার্জ: ৳${deliveryCharge}
+💰 সর্বমোট: ৳${total}
 
 💳 পেমেন্ট: ${payment}`;
 
 
-  if(payment==="bKash"){
+if(payment==="bKash"){
 
-    message +=
-      `\n💳 bKash নম্বর: ${BKASH_NUMBER}`;
+message+=
+`\n💳 bKash নম্বর: ${BKASH_NUMBER}`;
 
-  }
-
-
-  if(payment==="Nagad"){
-
-    message +=
-      `\n💳 Nagad নম্বর: ${NAGAD_NUMBER}`;
-
-  }
+}
 
 
-  if(note){
+if(payment==="Nagad"){
 
-    message +=
-      `\n📝 নোট: ${note}`;
+message+=
+`\n💳 Nagad নম্বর: ${NAGAD_NUMBER}`;
 
-  }
-
-
-  message +=
-    "\n\nধন্যবাদ ❤️";
+}
 
 
-  const url=
-    "https://wa.me/"+
-    WHATSAPP_NUMBER+
-    "?text="+
-    encodeURIComponent(message);
+if(note){
+
+message+=
+`\n📝 নোট: ${note}`;
+
+}
 
 
-  window.open(url,"_blank");
+message+=
+"\n\nধন্যবাদ ❤️";
+
+
+const url=
+"https://wa.me/"+
+WHATSAPP_NUMBER+
+"?text="+
+encodeURIComponent(message);
+
+
+window.open(url,"_blank");
 
 }
 
